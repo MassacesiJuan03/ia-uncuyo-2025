@@ -1,138 +1,151 @@
 from collections import deque
 from queue import PriorityQueue
 
-def get_neighbors(map, position):
+def get_neighbors_cost(env, position):
     x, y = position
+    moves = {'LEFT':(0,-1), 'RIGHT':(0,1), 'UP':(-1,0), 'DOWN':(1,0)}
     neighbors = []
     
-    # Arriba
-    if x-1 >= 0 and map[x-1][y] != "H":
-        neighbors.append((x-1, y))
-            
-    # Abajo
-    if x+1 < len(map) and map[x+1][y] != "H":
-        neighbors.append((x+1, y))
-    
-    # Izquierda    
-    if y-1 >= 0 and map[x][y-1] != "H":
-        neighbors.append((x, y-1))
-    
-    # Derecha   
-    if y+1 < len(map) and map[x][y+1] != "H":
-        neighbors.append((x, y+1))
-        
+    for move, (dx, dy) in moves.items():
+        if 0 <= x + dx < len(env) and 0 <= y + dy < len(env[0]):
+            if env[x + dx][y + dy] != "H":
+                neighbors.append((move, (x + dx, y + dy)))           
     return neighbors
 
-def bfs_search(map, start, max_lifetime=1000):
-    queue = deque([(start, [])])  
-    visited = set()
-    
-    Lifetime = 0
-    while queue:
-        current, path = queue.popleft()
-        
-        Lifetime += 1
-        if Lifetime >= max_lifetime:
-            return False, path
-        
-        if map[current[0]][current[1]] == "G":
-            return True, path + [current]
-        
-        for neighbor in get_neighbors(map, current):
+def bfs(env, start, goal):
+    move_cost = {'LEFT':1, 'RIGHT':1, 'UP':10, 'DOWN':10}
+    queue = deque([start])  
+    visited = {start: None}
+    cost = {start: 0}
+    steps = 0
+
+    while steps < 1000:
+        current = queue.popleft()
+        steps += 1
+
+        if current == goal:
+            path = []
+            while current:
+                path.append(current)
+                current = visited[current]
+            return True, path[::-1], cost[goal]
+
+        for move, neighbor in get_neighbors_cost(env, current):
             if neighbor not in visited:
-                visited.add(neighbor)
-                queue.append((neighbor, path + [current]))
-    
-    return False, path
+                visited[neighbor] = current
+                cost[neighbor] = cost[current] + move_cost[move]
+                queue.append(neighbor)
 
-def dfs_search(map, start, max_lifetime=1000):
-    stack = [(start, [])]
-    visited = set()
-    
-    Lifetime = 0
-    while stack:
-        current, path = stack.pop()
-        
-        Lifetime += 1
-        if Lifetime >= max_lifetime:
-            return False, path
-        
-        if map[current[0]][current[1]] == "G":
-            return True, path + [current]
-        
-        for neighbor in get_neighbors(map, current):
+    return False, [], 0
+
+def dfs(env, start, goal):
+    move_cost = {'LEFT':1, 'RIGHT':1, 'UP':10, 'DOWN':10}
+    stack = [start]
+    visited = {start:None}
+    steps = 0
+    cost = {start: 0}
+
+    while steps < 1000:
+        current = stack.pop()
+        steps += 1
+
+        if current == goal:
+            path = []
+            while current:
+                path.append(current)
+                current = visited[current]
+            return True, path[::-1], cost[goal]
+
+        for move, neighbor in get_neighbors_cost(env, current):
             if neighbor not in visited:
-                visited.add(neighbor)
-                stack.append((neighbor, path + [current]))
-                
-    return False, path
+                visited[neighbor] = current
+                cost[neighbor] = cost[current] + move_cost[move]
+                stack.append((neighbor))
 
-def dfs_search_limited(map, start, limit):
-    stack = [(start, [], 0)]  
-    visited = set()
-    
-    while stack:
-        current, path, depth = stack.pop()
-        
-        if map[current[0]][current[1]] == "G":
-            return True, path + [current]
-        
-        if depth < limit:
-            for neighbor in get_neighbors(map, current):
-                if neighbor not in visited:
-                    visited.add(neighbor)
-                    stack.append((neighbor, path + [current], depth + 1))
-    
-    return False, path
+    return False, [], 0
 
-def uniform_cost_search(map, start, max_lifetime=1000):
+def dls(env, start, goal, limit):
+    move_cost = {'LEFT':1, 'RIGHT':1, 'UP':10, 'DOWN':10}
+    stack = [start]
+    visited = {start:None}
+    steps = 0
+    cost = {start: 0}
+
+    while steps < limit:
+        current = stack.pop()
+        steps += 1
+
+        if current == goal:
+            path = []
+            while current:
+                path.append(current)
+                current = visited[current]
+            return True, path[::-1], cost[goal]
+
+        for move, neighbor in get_neighbors_cost(env, current):
+            if neighbor not in visited:
+                visited[neighbor] = current
+                cost[neighbor] = cost[current] + move_cost[move]
+                stack.append(neighbor)
+
+    return False, [], 0
+
+def ucs(env, start, goal):
+    cost_env = {'LEFT':1, 'RIGHT':1, 'UP':10, 'DOWN':10}
     pq = PriorityQueue()
-    pq.put((0, start, []))  
-    visited = set()
-    
-    Lifetime = 0
-    while not pq.empty():
-        cost, current, path = pq.get()
-        
-        Lifetime += 1
-        if Lifetime >= max_lifetime:
-            return False, path
-        
-        if map[current[0]][current[1]] == "G":
-            return True, path + [current]
-        
-        for neighbor in get_neighbors(map, current):
-            if neighbor not in visited:
-                visited.add(neighbor)
-                pq.put((cost + 1, neighbor, path + [current]))
-    
-    return False, path
+    pq.put((0, start))
+    visited = {start: None}
+    g_cost = {start:0}
+    steps = 0
 
-def a_star_search(map, start, goal, max_lifetime=1000):
+    while not pq.empty() and steps < 1000:
+        cost, current = pq.get()
+        steps += 1
+
+        if current == goal:
+            path = []
+            while current:
+                path.append(current)
+                current = visited[current]
+            return True, path[::-1], g_cost[goal]
+
+        for move, neighbor in get_neighbors_cost(env, current):
+            new_cost = g_cost[current] + cost_env[move]
+            if neighbor not in g_cost or new_cost < g_cost[neighbor]:
+                visited[neighbor] = current
+                g_cost[neighbor] = new_cost
+                pq.put((new_cost, neighbor))
+
+    return False, [], 0
+
+def a_star(env, start, goal):
+    cost_env = {'LEFT':1, 'RIGHT':1, 'UP':10, 'DOWN':10}
     # Distancia de Manhattan
-    heuristic = lambda pos: abs(pos[0]-goal[0]) + abs(pos[1]-goal[1])
-    
+    heuristic = lambda pos: (abs(pos[0]-goal[0])*10) + abs(pos[1]-goal[1])
+
     pq = PriorityQueue()
-    pq.put((heuristic(start), 0, start, []))
-    visited = set()
-    
-    Lifetime = 0
-    while not pq.empty():
-        _, g_cost, current, path = pq.get()
-        
-        visited.add(current)
-        
-        Lifetime += 1
-        if Lifetime >= max_lifetime:
-            return False, path
-        
-        if map[current[0]][current[1]] == "G":
-            return True, path + [current]
-        
-        for neighbor in get_neighbors(map, current):
-            if neighbor not in visited:
-                new_g_cost = g_cost + 1
-                new_f_cost = new_g_cost + heuristic(neighbor)
-                pq.put((new_f_cost, new_g_cost, neighbor, path + [current]))
-    
-    return False, path
+    pq.put((heuristic(start), 0, start))
+    visited = {start: None}
+    g_cost = {start: 0}
+    steps = 0
+
+    while not pq.empty() and steps < 1000:
+        _, g_cost_current, current = pq.get()
+        steps += 1
+
+        if current == goal:
+            path = []
+            while current:
+                path.append(current)
+                current = visited[current]
+            return True, path[::-1], g_cost[goal]
+
+        for move, neighbor in get_neighbors_cost(env, current):
+            new_g_cost = g_cost_current + cost_env[move]
+            if neighbor not in g_cost or new_g_cost < g_cost[neighbor]:
+                g_cost[neighbor] = new_g_cost
+                f_cost = new_g_cost + heuristic(neighbor)
+                visited[neighbor] = current
+                pq.put((f_cost, new_g_cost, neighbor))
+
+    return False, [], 0
