@@ -1,5 +1,6 @@
 from collections import deque
 from queue import PriorityQueue
+import random
 
 def get_neighbors_cost(env, position):
     x, y = position
@@ -148,4 +149,31 @@ def a_star(env, start, goal):
                 visited[neighbor] = current
                 pq.put((f_cost, new_g_cost, neighbor))
 
+    return False, [], 0
+
+def random_search(env, start, goal):
+    move_cost = {'LEFT':1, 'RIGHT':1, 'UP':10, 'DOWN':10}
+    visited = {start: None}
+    cost = {start: 0}
+    steps = 0
+    current = start
+
+    while steps < 1000:
+        if current == goal:
+            path = []
+            while current:
+                path.append(current)
+                current = visited[current]
+            return True, path[::-1], cost[goal]
+
+        neighbors = get_neighbors_cost(env, current)
+        if not neighbors:
+            break
+
+        move, neighbor = random.choice(neighbors)
+        visited[neighbor] = current
+        cost[neighbor] = cost[current] + move_cost[move]
+        current = neighbor
+        
+        steps += 1
     return False, [], 0

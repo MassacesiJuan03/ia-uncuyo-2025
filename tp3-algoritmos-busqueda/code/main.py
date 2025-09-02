@@ -8,17 +8,6 @@ from gymnasium import wrappers
 from map import generate_random_map_custom
 from search_functions import bfs, dfs, dls, ucs, a_star
 
-def actions_cost_esc2(path):
-    cost = 0
-    for i in range(len(path)-1):
-        x1, _ = path[i]
-        x2, _ = path[i+1]
-        if x2 != x1:
-            cost += 10
-        else:
-            cost += 1
-    return cost
-
 
 def generate_envs():
     envs = []

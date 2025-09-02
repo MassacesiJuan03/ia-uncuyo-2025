@@ -1,4 +1,4 @@
-from search_functions import bfs, dfs, ucs, a_star
+from search_functions import bfs, dfs, ucs, a_star, random_search
 from main import generate_envs
 
 def view_env(env, path):
@@ -33,5 +33,9 @@ if __name__ == "__main__":
         print("A* Search")
         _, path_a_star, _ = a_star(desc, start, goal)
         view_env(env, path_a_star)
-        
+
+        print("Random Search")
+        _, path_random, _ = random_search(desc, start, goal)
+        view_env(env, path_random)
+
     env.close()
