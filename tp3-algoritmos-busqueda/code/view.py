@@ -1,4 +1,4 @@
-from search_functions import bfs, dfs, ucs, a_star, random_search
+from search_functions import bfs, dfs, ucs1, a_star1, Random
 from main import generate_envs
 
 def view_env(env, path):
@@ -18,24 +18,20 @@ if __name__ == "__main__":
     for env, start, goal, _ in envs:
         desc = env.unwrapped.desc.astype(str).tolist()
         
-        print("BFS")
-        _, path_bfs, _ = bfs(desc, start, goal)
-        view_env(env, path_bfs)
+        # print("BFS")
+        # _, path_bfs, _ = bfs(desc, start, goal)
+        # view_env(env, path_bfs)
 
-        print("DFS")
-        _, path_dfs, _ = dfs(desc, start, goal)
-        view_env(env, path_dfs)
+        # print("DFS")
+        # _, path_dfs, _ = dfs(desc, start, goal)
+        # view_env(env, path_dfs)
 
-        print("Uniform Cost Search")
-        _, path_ucs, _ = ucs(desc, start, goal)
-        view_env(env, path_ucs)
+        # print("Uniform Cost Search")
+        # _, path_ucs, _ = ucs1(desc, start, goal)
+        # view_env(env, path_ucs)
 
         print("A* Search")
-        _, path_a_star, _ = a_star(desc, start, goal)
+        _, path_a_star, _ = a_star1(desc, start, goal)
         view_env(env, path_a_star)
-
-        print("Random Search")
-        _, path_random, _ = random_search(desc, start, goal)
-        view_env(env, path_random)
 
     env.close()
