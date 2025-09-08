@@ -46,10 +46,10 @@ Heuristica usada para A*: **Distancia de Manhattan**
 **A\*** demuestra ser el algoritmo más competente en ambos escenarios gracias a su bajo costo de acciones, pocos estados explorados, menor cantidad de acciones y tiempos reducidos.
 
 
-[image1]: tp3-algoritmos-busqueda/images/boxplot_actions_cost.png
+[image1]: images/boxplot_actions_cost.png
 
-[image2]: tp3-algoritmos-busqueda/images/boxplot_actions_count.png
+[image2]: images/boxplot_actions_count.png
 
-[image3]: tp3-algoritmos-busqueda/images/boxplot_states_n.png
+[image3]: images/boxplot_states_n.png
 
-[image4]: tp3-algoritmos-busqueda/images/boxplot_time.png
+[image4]: images/boxplot_time.png
