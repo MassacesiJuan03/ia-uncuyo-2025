@@ -1,16 +1,6 @@
 from view_board import vector_board, print_board
 
-
-def hill_climbing(board):
-    """Implementa el algoritmo de Hill Climbing para resolver el problema de las n-reinas.
-    
-    Args:
-        board (list): Una lista que representa las posiciones de las reinas en cada columna.
-    
-    Returns:
-        list: Una lista que representa la solución encontrada o la mejor solución local.
-    """
-    def calculate_attacks(board):
+def calculate_attacks(board):
         """Calcula el número de ataques entre reinas en el tablero."""
         attacks = 0
         n = len(board)
@@ -20,10 +10,13 @@ def hill_climbing(board):
                     attacks += 1
         return attacks
     
+def hill_climbing(board, max_iterations=1000):
+    n = len(board)
     current_board = board[:]
     h = calculate_attacks(current_board)
+    iterations = 0
 
-    while True:
+    while iterations < max_iterations:
         neighbors = []
         for col in range(n):
             for row in range(n):
@@ -46,6 +39,8 @@ def hill_climbing(board):
 
         current_board = next_board
         h = next_h
+        
+        iterations += 1
 
     return current_board, h
 

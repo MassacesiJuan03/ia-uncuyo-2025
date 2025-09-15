@@ -1,20 +1,9 @@
 import random
 import math
+import numpy as np
 from view_board import vector_board, print_board
 
-
-def simulated_annealing(board):
-    """Aplica el algoritmo de recocido simulado para resolver el problema de las n-reinas.
-    
-    Args:
-        board (list): Una lista que representa las posiciones de las reinas en cada columna.
-        temperature (float): La temperatura inicial para el recorrido simulado.
-        cooling_rate (float): La tasa de enfriamiento.
-    
-    Returns:
-        list: Una lista que representa la solución encontrada o la mejor solución local.
-    """
-    def calculate_attacks(board):
+def calculate_attacks(board):
         """Calcula el número de ataques entre reinas en el tablero."""
         attacks = 0
         n = len(board)
@@ -23,16 +12,30 @@ def simulated_annealing(board):
                 if board[i] == board[j] or abs(board[i] - board[j]) == abs(i - j):
                     attacks += 1
         return attacks
+    
+def schedule(t):
+    """Función de enfriamiento."""
+    return 1/(1+t)
 
+def probability(delta, temperature):
+    """Calcula la probabilidad de aceptar una solución peor."""
+    return math.exp(-delta / temperature)
+    
+def simulated_annealing(board, max_iterations=1000):
     current_board = board[:]
     current_h = calculate_attacks(current_board)
-    best_board = current_board[:]
-    best_h = current_h
 
-    t = 1.0
+    initial_temp = 1000
+    final_temp = 1
     cooling_rate = 0.99
+    
+    temperatures = np.arange(initial_temp, final_temp, -cooling_rate)
+    i = 0
 
-    while t > 0.01:
+    for t in temperatures:
+        # Enfriar la temperatura
+        t = schedule(t)
+    
         # Generar un vecino aleatorio
         col = random.randint(0, n - 1)
         row = random.randint(0, n - 1)
@@ -46,21 +49,21 @@ def simulated_annealing(board):
         if neighbor_h < current_h:
             current_board = neighbor
             current_h = neighbor_h
-
-            # Actualizar la mejor solución encontrada
-            if current_h < best_h:
-                best_board = current_board[:]
-                best_h = current_h
         else:
-            # Aceptar el vecino con una probabilidad
-            if math.exp((current_h - neighbor_h) / t) > random.random():
+            # Si el vecino es peor, lo aceptamos con cierta probabilidad
+            delta = neighbor_h - current_h
+            if delta < 0 or random.random() < probability(delta, t):
                 current_board = neighbor
                 current_h = neighbor_h
 
-        # Enfriar la temperatura
-        t *= cooling_rate
+        if current_h == 0:
+            break  # Solución óptima encontrada
+        i += 1
+        if i >= max_iterations:
+            break  # Limitar el número de iteraciones
+        
 
-    return best_board, best_h
+    return current_board, current_h
 
 if __name__ == "__main__":
     n = 8
