@@ -1,69 +1,66 @@
-import random
+from __future__ import annotations
+
 import math
-import numpy as np
-from view_board import vector_board, print_board
+import random
+from typing import List, Tuple
 
-def calculate_attacks(board):
-        """Calcula el número de ataques entre reinas en el tablero."""
-        attacks = 0
-        n = len(board)
-        for i in range(n):
-            for j in range(i + 1, n):
-                if board[i] == board[j] or abs(board[i] - board[j]) == abs(i - j):
-                    attacks += 1
-        return attacks
-    
-def schedule(t):
-    """Función de enfriamiento."""
-    return 1/(1+t)
+from nqueens_utils import calculate_attacks
+from view_board import print_board, vector_board
 
-def probability(delta, temperature):
-    """Calcula la probabilidad de aceptar una solución peor."""
-    return math.exp(-delta / temperature)
-    
-def simulated_annealing(board, max_iterations=1000):
-    current_board = board[:]
+
+def simulated_annealing(
+    initial_board: List[int],
+    max_states: int,
+    seed: int | None = None,
+    history: List[Tuple[int, int]] | None = None,
+) -> Tuple[List[int], int, int]:
+    rng = random.Random(seed)
+    n = len(initial_board)
+    current_board = initial_board[:]
     current_h = calculate_attacks(current_board)
+    best_board = current_board[:]
+    best_h = current_h
+    states_explored = 1
 
-    initial_temp = 1000
-    final_temp = 1
-    cooling_rate = 0.99
-    
-    temperatures = np.arange(initial_temp, final_temp, -cooling_rate)
-    i = 0
+    if history is not None:
+        history.append((states_explored, best_h))
 
-    for t in temperatures:
-        # Enfriar la temperatura
-        t = schedule(t)
-    
-        # Generar un vecino aleatorio
-        col = random.randint(0, n - 1)
-        row = random.randint(0, n - 1)
+    temperature = 1000.0
+    final_temp = 1e-3
+    cooling_rate = 0.995
+
+    while temperature > final_temp and states_explored < max_states:
+        col = rng.randrange(n)
+        row = rng.randrange(n)
         neighbor = current_board[:]
         neighbor[col] = row
 
-        # Calcular el costo del vecino
         neighbor_h = calculate_attacks(neighbor)
+        states_explored += 1
+        delta = neighbor_h - current_h
 
-        # Si el vecino es mejor, lo aceptamos
-        if neighbor_h < current_h:
+        if delta < 0:
             current_board = neighbor
             current_h = neighbor_h
         else:
-            # Si el vecino es peor, lo aceptamos con cierta probabilidad
-            delta = neighbor_h - current_h
-            if delta < 0 or random.random() < probability(delta, t):
+            acceptance_probability = math.exp(-delta / max(temperature, 1e-9))
+            if rng.random() < acceptance_probability:
                 current_board = neighbor
                 current_h = neighbor_h
 
-        if current_h == 0:
-            break  # Solución óptima encontrada
-        i += 1
-        if i >= max_iterations:
-            break  # Limitar el número de iteraciones
-        
+        if current_h < best_h:
+            best_board = current_board[:]
+            best_h = current_h
 
-    return current_board, current_h
+        if history is not None:
+            history.append((states_explored, best_h))
+
+        if best_h == 0:
+            break
+
+        temperature *= cooling_rate
+
+    return best_board, best_h, states_explored
 
 if __name__ == "__main__":
     n = 8
@@ -73,13 +70,16 @@ if __name__ == "__main__":
         print("Tablero inicial:")
         print(initial_board)
 
-        solution, h = simulated_annealing(initial_board)
+        solution, h, states = simulated_annealing(initial_board, max_states=1000, seed=seed)
 
         print("Solución encontrada:")
         print(solution)
 
         print("Número de ataques:")
         print(h)
+
+        print("Estados explorados:")
+        print(states)
 
         print("Representación del tablero:")
         print_board(solution)
