@@ -84,7 +84,7 @@ Este reporte presenta la evaluación comparativa de cuatro algoritmos de búsque
 
 ### 3.1 Distribución de Conflictos (H)
 
-![Distribución de H por Algoritmo](code/images/boxplot_H.png)
+![Distribución de H por Algoritmo](images/boxplot_H.png)
 
 La figura muestra la distribución de la función objetivo H (número de conflictos) para cada algoritmo y tamaño de tablero:
 
@@ -94,7 +94,7 @@ La figura muestra la distribución de la función objetivo H (número de conflic
 
 ### 3.2 Estados Explorados
 
-![Distribución de Estados Explorados](code/images/boxplot_states.png)
+![Distribución de Estados Explorados](images/boxplot_states.png)
 
 El análisis de eficiencia computacional revela:
 
@@ -105,7 +105,7 @@ El análisis de eficiencia computacional revela:
 
 ### 3.3 Tiempo de Ejecución
 
-![Distribución de Tiempo de Ejecución](code/images/boxplot_time.png)
+![Distribución de Tiempo de Ejecución](images/boxplot_time.png)
 
 Los tiempos de ejecución muestran patrones coherentes con la complejidad algorítmica:
 
@@ -142,13 +142,13 @@ El análisis revela un patrón claro de degradación del desempeño conforme aum
 
 ### 5.1 Tablero 4×4
 
-![Evolución H - 4x4](code/images/h_evolution_size_4.png)
+![Evolución H - 4x4](images/h_evolution_size_4.png)
 
 En el tablero 4×4, todos los algoritmos muestran convergencia rápida hacia la solución óptima. Random encuentra la solución casi inmediatamente, HC converge en pocos pasos, mientras SA y GA requieren más evaluaciones pero alcanzan H=0 de forma consistente.
 
 ### 5.2 Tablero 8×8
 
-![Evolución H - 8x8](code/images/h_evolution_size_8.png)
+![Evolución H - 8x8](images/h_evolution_size_8.png)
 
 El aumento de complejidad en 8×8 revela las diferencias algorítmicas:
 - **SA** muestra convergencia sostenida hacia H=0, evitando eficazmente los mínimos locales
@@ -158,7 +158,7 @@ El aumento de complejidad en 8×8 revela las diferencias algorítmicas:
 
 ### 5.3 Tablero 10×10
 
-![Evolución H - 10x10](code/images/h_evolution_size_10.png)
+![Evolución H - 10x10](images/h_evolution_size_10.png)
 
 En el problema más complejo, solo SA y GA muestran capacidad de encontrar soluciones:
 - **SA** mantiene un patrón de convergencia gradual pero efectivo
