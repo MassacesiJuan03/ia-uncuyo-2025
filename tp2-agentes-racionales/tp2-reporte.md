@@ -18,37 +18,58 @@ En entornos más grandes, la eficiencia de ambos agentes disminuye, pero el Agen
 
 El Agente Random muestra una eficiencia baja y bastante estable, sin importar el tamaño del entorno, lo que indica que su desempeño no mejora. Esto se debe a que la cantidad de pasos que realiza es mayor a la performance, tiene sentido ya que no sabe cuando una celda está sucia.
 
-3) Boxplot de efectividad por agente  
-   
+3) Boxplot de efectividad por agente en entornos 4x4
 
 ![][image3]  
-En este diagrama de cajas de efectividad por agente se puede observar lo siguiente:
+Este diagrama muestra la efectividad de ambos agentes en entornos pequeños (4x4) separados por dirt_rate:
 
-La mediana, la dispersión y la presencia de valores extremos.
+**Dirt Rate = 0.1 y 0.2**: En estos escenarios con poca suciedad, ambos agentes muestran efectividades muy bajas pero similares. El Agente Reflexivo Simple tiene una mediana ligeramente superior, pero la variabilidad es alta en ambos casos. Con menos suciedad disponible, incluso el agente reflexivo tiene dificultades para encontrar y limpiar todas las celdas sucias en un entorno pequeño.
 
-Se observa que el Agente Reflexivo Simple tiene una mediana de efectividad claramente mayor que el Agente Random. Esto significa que, en la mayoría de los casos, limpia un mayor porcentaje de la suciedad total.
+**Dirt Rate = 0.4**: Aquí se observa una diferencia significativa. El Agente Reflexivo Simple alcanza efectividades cercanas a 1.0 en la mayoría de ejecuciones (mediana alta), mientras que el Agente Random se mantiene muy bajo (cerca de 0.05). Esto demuestra que con suficiente suciedad, el agente reflexivo puede limpiar casi todo el entorno pequeño.
 
-La dispersión de la efectividad es bastante alta en ambos agentes, pero especialmente en el Random, donde la mayoría de los valores están por debajo de 0.2 y algunos pocos alcanzan valores altos. El Agente Random presenta una mayor concentración de sus datos entre el 0.0 y la mediana, es decir, su efectividad promedio es bastante baja a comparación del Agente Reflexivo Simple.
+**Dirt Rate = 0.8**: Con alta densidad de suciedad, el Agente Reflexivo Simple mantiene su excelente desempeño con mediana cercana a 1.0, mientras que el Agente Random mejora levemente pero sigue siendo muy inefectivo. Los outliers del Random sugieren que ocasionalmente tiene suerte y limpia más de lo esperado.
 
-El Agente Reflexivo Simple logra valores de efectividad cercanos a 1 (100%) en más ocasiones, lo que indica que es más probable que limpie todo el entorno. Ambos agentes pueden tener ejecuciones muy malas (efectividad cercana a 0).
-
-4) Boxplot de eficiencia por agente
+4) Boxplot de eficiencia por agente en entornos 4x4
 
 ![][image4]  
-En este diagrama de cajas de eficiencia por agente se puede observar lo siguiente:
+Este diagrama muestra la eficiencia (celdas limpiadas por paso) en entornos 4x4:
 
-El Agente Reflexivo Simple tiene una eficiencia promedio (mediana) mayor que el Agente Random. Esto indica que, en general, limpia más celdas por paso.
+**Dirt Rate = 0.1 y 0.2**: La eficiencia de ambos agentes es baja debido a la escasa suciedad. El Agente Reflexivo Simple muestra mayor variabilidad y algunos casos de alta eficiencia cuando logra encontrar y limpiar rápidamente las pocas celdas sucias.
 
-La variabilidad de la eficiencia es mayor en el Agente Reflexivo Simple, pero ambos agentes tienen la mayoría de sus valores de eficiencia en la parte baja del gráfico, es decir, son bastante ineficientes en término de esta.
+**Dirt Rate = 0.4**: El Agente Reflexivo Simple muestra una eficiencia significativamente mayor, con valores concentrados entre 0.1 y 1.0, mientras que el Agente Random se mantiene cerca de 0.05. Esto indica que el agente reflexivo aprovecha mejor cada paso para limpiar.
 
-Ambos agentes presentan outliers (círculos por encima de la caja), es decir, hay ejecuciones donde la eficiencia fue mucho mayor a lo habitual. Sin embargo, la mayoría de las ejecuciones se concentran en valores bajos.
+**Dirt Rate = 0.8**: Con alta densidad de suciedad, el Agente Reflexivo Simple alcanza eficiencias entre 0.15 y 0.35, con algunos casos cercanos a 1.0, mientras que el Agente Random mejora ligeramente pero sigue siendo menos eficiente. Los outliers indican ejecuciones donde ambos agentes tuvieron un desempeño inusualmente bueno o malo.
 
-El Agente Random es menos eficiente y más consistente, pero su eficiencia máxima es mucho menor que la del Agente Reflexivo Simple.  
+5) Boxplot de efectividad por agente en entornos 64x64
+
+![][image5]  
+Este diagrama muestra la efectividad en entornos grandes (64x64):
+
+**Dirt Rate = 0.1 y 0.2**: En entornos grandes con poca suciedad, ambos agentes tienen efectividades muy bajas (medianas cercanas a 0.0). La dificultad de encontrar las pocas celdas sucias en un espacio grande hace que incluso el Agente Reflexivo Simple tenga bajo desempeño.
+
+**Dirt Rate = 0.4**: Ambos agentes mejoran ligeramente, pero siguen siendo bastante inefectivos (medianas por debajo de 0.1). El Agente Reflexivo Simple muestra una mediana marginalmente superior y mayor variabilidad, con algunos casos alcanzando 0.5-1.0 de efectividad.
+
+**Dirt Rate = 0.8**: Con alta densidad de suciedad, el Agente Reflexivo Simple logra efectividades entre 0.05 y 0.2, con outliers cercanos a 0.35, mientras que el Agente Random se mantiene entre 0.05 y 0.13. En entornos grandes, incluso con mucha suciedad, ningún agente logra limpiar más del 35% del total en 1000 pasos.
+
+6) Boxplot de eficiencia por agente en entornos 64x64
+
+![][image6]  
+Este diagrama muestra la eficiencia en entornos 64x64:
+
+**Dirt Rate = 0.1 y 0.2**: La eficiencia es muy baja para ambos agentes (medianas cercanas a 0.0), con alta variabilidad. Ocasionalmente, algún agente tiene suerte y alcanza eficiencias de 0.03-0.07.
+
+**Dirt Rate = 0.4**: Ambos agentes muestran eficiencias muy bajas (cerca de 0.0) con alta variabilidad. Los outliers indican casos excepcionales donde se logró mayor eficiencia, probablemente cuando el agente inició cerca de zonas con alta concentración de suciedad.
+
+**Dirt Rate = 0.8**: Con alta densidad de suciedad, la eficiencia mejora ligeramente. El Agente Reflexivo Simple alcanza medianas entre 0.05 y 0.2, mientras que el Agente Random se mantiene entre 0.05 y 0.13. La alta variabilidad y presencia de outliers sugiere que la posición inicial del agente afecta significativamente su eficiencia en entornos grandes.  
 
 [image1]: images/efectividad_por_size_y_agente.png
 
 [image2]: images/eficiencia_por_size_y_agente.png
 
-[image3]: images/boxplot_efectividad_por_agente.png
+[image3]: images/boxplot_efectividad_4x4.png
 
-[image4]: images/boxplot_eficiencia_por_agente.png
+[image4]: images/boxplot_eficiencia_4x4.png
+
+[image5]: images/boxplot_efectividad_64x64.png
+
+[image6]: images/boxplot_eficiencia_64x64.png
