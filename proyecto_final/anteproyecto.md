@@ -32,7 +32,7 @@ La batalla contra Ganon tiene múltiples objetivos que permiten evaluar el desem
 
 Para la realización del proyecto se utilizarán las siguientes herramientas:
 
-- **Gym Retro**: Plataforma de OpenAI para juegos retro que permite interactuar con The Legend of Zelda: A Link to the Past como un entorno de Reinforcement Learning. Proporciona acceso a la RAM del juego, permitiendo observar estados (vida de Link, vida de Ganon, posición, etc.) y enviar acciones (movimiento, ataque, etc.).
+- **Stable Retro**: Versión mantenida por la comunidad de Gym Retro que permite interactuar con The Legend of Zelda: A Link to the Past como un entorno de Reinforcement Learning. Proporciona acceso a la RAM del juego, permitiendo observar estados (vida de Link, vida de Ganon, posición, etc.) y enviar acciones (movimiento, ataque, etc.). Se utiliza esta versión ya que Gym Retro original de OpenAI ya no recibe mantenimiento activo.
 - **Python 3.x**: Lenguaje de programación principal para la implementación.
 - **Stable Baselines3** (opcional): Librería de Python con implementaciones optimizadas de algoritmos de RL, útil para DQN si se implementa.
 - **NumPy y Pandas**: Para procesamiento de datos y cálculo de métricas.
@@ -45,6 +45,40 @@ Para la realización del proyecto se utilizarán las siguientes herramientas:
 El aprendizaje por refuerzo ofrece un enfoque adecuado para abordar la batalla final contra Ganon en The Legend of Zelda: A Link to the Past, ya que permite al agente aprender estrategias óptimas a partir de la interacción directa con el entorno, sin requerir conocimiento previo o reglas explícitas. Mediante la maximización de recompensas, el agente puede desarollar comportamientos que le van a permitir mejorar su desempeño.
 Los algoritmos de aprendizaje por refuerzo presentan la capacidad de adaptarse a patrones dinámicos, lo que resulta esencial en una pelea donde los ataques y movimientos del enemigo varían constantemente. Además, este enfoque posibilita la toma de decisiones en tiempo real, permitiendo que el agente determine de manera eficiente cuándo atacar, esquivar o utilizar ítems según la situación.
 
+## Experimentos
+
+Se implementará una estrategia de entrenamiento progresivo con evaluaciones independientes, separando claramente las fases de entrenamiento y evaluación.
+
+### Metodología de Entrenamiento y Evaluación
+
+Para cada algoritmo Q-Learning y DQN, se seguirá el siguiente protocolo experimental:
+
+**Fase 1 - Entrenamiento inicial (1000 episodios):**
+- Entrenar el agente durante 1000 episodios en la batalla contra Ganon
+- Guardar el modelo entrenado resultante
+- Evaluar este modelo en 100 episodios de prueba independientes
+- Registrar todas las métricas de desempeño
+
+**Fase 2 - Entrenamiento extendido (2000 episodios):**
+- Entrenar el agente durante 2000 episodios en la batalla contra Ganon
+- Guardar el modelo entrenado resultante
+- Evaluar este modelo en 100 episodios de prueba independientes
+- Registrar todas las métricas de desempeño
+
+**Fase 3 - Entrenamiento completo (3000 episodios):**
+- Entrenar el agente durante 3000 episodios en la batalla contra Ganon
+- Guardar el modelo entrenado resultante
+- Evaluar este modelo en 100 episodios de prueba independientes
+- Registrar todas las métricas de desempeño
+
+Esta estrategia permitirá:
+- Observar la curva de aprendizaje de cada algoritmo a medida que aumentan los episodios de entrenamiento
+- Identificar si existe convergencia en el aprendizaje y en qué punto ocurre
+- Determinar el número óptimo de episodios de entrenamiento necesarios para cada enfoque
+- Detectar posibles casos de sobreajuste (overfitting) si el desempeño disminuye con más entrenamiento
+- Realizar comparaciones justas entre algoritmos utilizando los mismos 100 episodios de evaluación en cada fase
+
+Los 100 episodios de evaluación se mantendrán consistentes y separados del conjunto de entrenamiento para todas las fases y algoritmos, garantizando una evaluación imparcial del desempeño aprendido.
 
 
 ## Listado de Actividades a Realizar
@@ -63,7 +97,7 @@ Los algoritmos de aprendizaje por refuerzo presentan la capacidad de adaptarse a
 12. Elaboración del informe final [5 días]
 13. Elaboración de la presentación [2 días]
 
-**Total estimado**: 30 días (incluyendo Q-Learning, Random y DQN opcional)
+**Total estimado**: 30 días (incluyendo Q-Learning, Random y DQN)
 
 ---
 
@@ -75,11 +109,11 @@ Los algoritmos de aprendizaje por refuerzo presentan la capacidad de adaptarse a
 - Russell, S., & Norvig, P. (2020). *Artificial Intelligence: A Modern Approach* (4th Edition). Capítulo 21: Reinforcement Learning. Pearson.
   - http://aima.cs.berkeley.edu/
 
-- Gym Retro - OpenAI
-  - https://github.com/openai/retro
+- Stable Retro - GitHub Repository
+  - https://github.com/Farama-Foundation/stable-retro
 
-- Gym Retro - Documentation (Getting Started)
-  - https://retro.readthedocs.io/en/latest/getting_started.html
+- Stable Retro Official Website
+  - https://stable-retro.farama.org/
 
 - Stable Baselines3 - Documentation
   - https://stable-baselines3.readthedocs.io/
